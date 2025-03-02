@@ -33,6 +33,7 @@ def lRegL2(df, target_var):
 
     accuracies = []
     f1_scores = []
+    roc_auc_scores = []
 
     plt.figure(figsize=(10, 6))
 
@@ -40,7 +41,7 @@ def lRegL2(df, target_var):
         x_train, x_test = x[train_idx], x[test_idx]
         y_train, y_test = y[train_idx], y[test_idx]
 
-        model = LogisticRegression(penalty='l2',solver='saga')
+        model = LogisticRegression(penalty='l2',solver='saga', max_iter=1000000)
         model.fit(x_train, y_train)
 
         y_pred = model.predict(x_test)
@@ -48,11 +49,15 @@ def lRegL2(df, target_var):
 
         accuracies.append(accuracy_score(y_test, y_pred))
         f1_scores.append(f1_score(y_test, y_pred))
+        roc_auc_scores.append(roc_auc_score(y_test, y_prob))
 
         fpr, tpr, _ = roc_curve(y_test, y_prob)
         roc_auc = auc(fpr, tpr)
 
         plt.plot(fpr, tpr, alpha=0.3, label=f'Fold AUC = {roc_auc:.2f}')
+
+    for i in roc_auc_scores:
+        print(i)
 
     plt.plot([0, 1], [0, 1], linestyle='--', color='gray')
     plt.xlabel('False Positive Rate')

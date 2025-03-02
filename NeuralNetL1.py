@@ -39,6 +39,7 @@ def NN(df, target_var):
 
     accuracies = []
     f1_scores = []
+    roc_auc_scores = []
 
     plt.figure(figsize=(10, 6))
 
@@ -68,12 +69,16 @@ def NN(df, target_var):
         # Store evaluation metrics
         accuracies.append(accuracy_score(y_test, y_pred))
         f1_scores.append(f1_score(y_test, y_pred))
+        roc_auc_scores.append(roc_auc_score(y_test, y_prob))
 
         # ROC Curve
         fpr, tpr, _ = roc_curve(y_test, y_prob)
         roc_auc = auc(fpr, tpr)
 
         plt.plot(fpr, tpr, alpha=0.3, label=f'Fold AUC = {roc_auc:.2f}')
+
+    for i in roc_auc_scores:
+        print(i)
 
     # Plot ROC Curve
     plt.plot([0, 1], [0, 1], linestyle='--', color='gray')
